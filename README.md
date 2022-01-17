@@ -26,13 +26,12 @@ NMR的匀场片分布尺寸可由用户指定，以(40,24)为例，指phi方向�
 ##### 裸磁场数据一维向量
 
 在计算灵敏度系数矩阵和匀场算法前，需要将二维的裸磁场数据reshape到一维。行表示phi方向，列表示theta方向。
-$$
-\left[
+
+![](https://latex.codecogs.com/svg.image?\left[
 	\begin{matrix}
 		A_{11} & A_{12} & A_{13} & A_{14} \\
 		A_{21} & A_{22} & A_{23} & A_{24} \\
 		A_{31} & A_{32} & A_{33} & A_{34} \\
-		
 		A_{41} & A_{42} & A_{43} & A_{44} 
 	\end{matrix} 
 \right]
@@ -48,8 +47,10 @@ $$
 		A_{43}\\
 		A_{44}\\
 	\end{matrix} 
-\right]
-$$
+\right])
+
+
+
 (33,32)->(1056,)  (33,24)->(796,)
 
 
@@ -57,22 +58,20 @@ $$
 ##### 灵敏度系数矩阵
 
 灵敏度系数矩阵指：单位面积的匀场片对DSV区域的每个点产生的z轴磁场强度。列数为NMR尺寸reshape到一维后的长度，如40x24=960，行数为DSV区域采样点reshape到一维后的长度，如33x32=1056。灵敏度系数矩阵的尺寸为(1056,960)
-$$
-B_z(r_i,z_i)=\frac{\mu{_0}m_z}{4\pi}\left(\frac{3z_i^2}{(r_i^2+z_i^2)^{2.5}}-\frac{1}{(r_i^2+z_i^2)^{1.5}}\right)
-$$
 
-这里的$r_i$和$z_i$分别表示P点和Q点在x0y平面的距离和z轴方向上的距离。$r_i^2+z_i^2$表示P点和Q点欧式距离的平方。
+<img src="https://latex.codecogs.com/svg.image?B_z(r_i,z_i)=\frac{\mu{_0}m_z}{4\pi}\left(\frac{3z_i^2}{(r_i^2&plus;z_i^2)^{2.5}}-\frac{1}{(r_i^2&plus;z_i^2)^{1.5}}\right)" title="B_z(r_i,z_i)=\frac{\mu{_0}m_z}{4\pi}\left(\frac{3z_i^2}{(r_i^2+z_i^2)^{2.5}}-\frac{1}{(r_i^2+z_i^2)^{1.5}}\right)" />
+
+这里的![](https://latex.codecogs.com/svg.image?r_i)和![](https://latex.codecogs.com/svg.image?z_i)分别表示P点和Q点在x0y平面的距离和z轴方向上的距离。![](https://latex.codecogs.com/svg.image?r_i^2+z_i^2)表示P点和Q点欧式距离的平方。
+
+灵敏度系数矩阵![](https://latex.codecogs.com/svg.image?A)第![](https://latex.codecogs.com/svg.image?i)行![](https://latex.codecogs.com/svg.image?j)列的值表示，第![](https://latex.codecogs.com/svg.image?j)片匀场片对DSV区域第![](https://latex.codecogs.com/svg.image?i)个采样点z方向上的磁场强度。
+
+匀场片分布![](https://latex.codecogs.com/svg.image?x)是长度为960的向量(960,1)，表示NMR每个匀场片的体积。
+
+因此，![](https://latex.codecogs.com/svg.image?Ax)表示
 
 
 
-灵敏度系数矩阵$A$第$i$行$j$列的值表示，第$j$片匀场片对DSV区域第$i$个采样点z方向上的磁场强度。
-
-匀场片分布$x$是长度为960的向量(960,1)，表示NMR每个匀场片的体积。
-
-因此，$Ax$表示
-$$
-\left[
-	\begin{matrix}
+![](https://latex.codecogs.com/svg.image?\left[\begin{matrix}
 		a_{1,1} & a_{1,2} & a_{1,3} & ... & a_{1,960} \\
 		a_{2,1} & a_{2,2} & a_{2,3} & ... & a_{2,960} \\
 		a_{3,1} & a_{3,2} & a_{3,3} & ... & a_{3,960} \\
@@ -100,43 +99,46 @@ $$
 		...\\
 		a_{1056,1}x_1+a_{1056,2}x_2+a_{1056,3}x_3+...+a_{1056,960}x_{960}\\
 	\end{matrix}
-\right]
-$$
-$Ax$向量长度为(1056,1)，表示960个匀场片区域对第$i$个DSV区域采样点z方向的磁场强度。
+\right])
+
+
+
+![](https://latex.codecogs.com/svg.image?Ax)向量长度为(1056,1)，表示960个匀场片区域对第![](https://latex.codecogs.com/svg.image?i)个DSV区域采样点z方向的磁场强度。
 
 
 
 ### 核心公式
 
-整个匀场优化不等式的核心条件：不均匀度低于$\varepsilon$
-$$
-H=\frac{|B_m+Ax-B_t|}{B_t}<\varepsilon
-$$
-$B_m$表示DSV区域采样z方向的裸磁场强度，本项目中size为(1056,1)，$Ax$表示匀场片对DSV区域产生的z方向磁场强度，$B_t$表示DSV区域采样点z方向的目标磁场强度，$|B_m+Ax-B_t|$表示DSV区域采样点实际磁场强度偏差值，与$B_t$相除得到DSV区域的不均匀度向量$H$。
+整个匀场优化不等式的核心条件：不均匀度低于![](https://latex.codecogs.com/svg.image?\varepsilon)
+
+![](https://latex.codecogs.com/svg.image?H=\frac{|B_m+Ax-B_t|}{B_t}<\varepsilon)
+
+![](https://latex.codecogs.com/svg.image?B_m)表示DSV区域采样z方向的裸磁场强度，本项目中size为(1056,1)，![](https://latex.codecogs.com/svg.image?Ax)表示匀场片对DSV区域产生的z方向磁场强度，![](https://latex.codecogs.com/svg.image?B_t)表示DSV区域采样点z方向的目标磁场强度，![](https://latex.codecogs.com/svg.image?|B_m+Ax-B_t|)表示DSV区域采样点实际磁场强度偏差值，与![](https://latex.codecogs.com/svg.image?B_t)相除得到DSV区域的不均匀度向量![](https://latex.codecogs.com/svg.image?H)。
 
 去绝对值：
-$$
-\begin{cases}
+
+![](https://latex.codecogs.com/svg.image?\begin{cases}
 	Ax-(1+\varepsilon)B_t\leq -B_m \\
 	-Ax+(1-\varepsilon)B_t\leq B_m
+\end{cases})
 
-\end{cases}
-$$
-这里的$B_t$有两种处理方法：视作变量还是定值？如果将$B_t$作为定值来处理(取裸磁场强度数据$B_m$的均值$B_{avg}$)：
+
+
+这里的![](https://latex.codecogs.com/svg.image?B_t)有两种处理方法：视作变量还是定值？如果将![](https://latex.codecogs.com/svg.image?B_t)作为定值来处理(取裸磁场强度数据![](https://latex.codecogs.com/svg.image?B_m)的均值![](https://latex.codecogs.com/svg.image?B_{avg}))：
 
 |                                  |  待匀场数据1(33x32)  |  待匀场数据2(33x24)   |
 | :------------------------------: | :------------------: | :-------------------: |
 |          匀场前不均匀度          | 374.1361988011714ppm | 673.6933666712266ppm  |
 | Bt为定值时最低不均匀度(非整数解) | 27.96210756804757ppm | 21.643841045385646ppm |
 
-如果将$B_t$作为变量来处理，由于$\varepsilon$是变量，所以目标会变成一个非线性规划问题(存在$\varepsilon{B_t}$)，这时就有两种方案：
+如果将![](https://latex.codecogs.com/svg.image?B_t)作为变量来处理，由于![](https://latex.codecogs.com/svg.image?\varepsilon)是变量，所以目标会变成一个非线性规划问题(存在![](https://latex.codecogs.com/svg.image?\varepsilon{B_t}))，这时就有两种方案：
 
-1. 固定$\varepsilon$，将$B_t$作为变量，通过步长遍历的方法手动搜索最低的$\varepsilon$值（因为单纯形法可以解出线性规划问题的全局最优解，如果手动设置的$\varepsilon$无法找到全局最优解，则证明无法将不均匀度降低到该值）
+1. 固定![](https://latex.codecogs.com/svg.image?\varepsilon)，将![](https://latex.codecogs.com/svg.image?B_t)作为变量，通过步长遍历的方法手动搜索最低的![](https://latex.codecogs.com/svg.image?\varepsilon)值（因为单纯形法可以解出线性规划问题的全局最优解，如果手动设置的![](https://latex.codecogs.com/svg.image?\varepsilon)无法找到全局最优解，则证明无法将不均匀度降低到该值)
 2. 将问题转化成非线性规划问题，求得最小的$\epsilon$
 
 
 
-A如果采用第一种方案：
+如果采用第一种方案：
 
 |                                  |  待匀场数据1(33x32)   |  待匀场数据2(33x24)  |
 | :------------------------------: | :-------------------: | :------------------: |
