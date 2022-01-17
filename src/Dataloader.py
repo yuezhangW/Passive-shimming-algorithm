@@ -1,13 +1,15 @@
-import pandas as pd
 import numpy as np
-from src.config import Config
+from src.Config import Config
 import os
 
 
 class Dataloader:
-    def __init__(self, filename):
+    def __init__(self, filename, r):
         self.folderPath = os.path.join(os.path.join(os.path.dirname(os.getcwd()), 'resources'), 'DamFiles')
         self.filePath = os.path.join(self.folderPath, filename)
+
+        # DSV区域半径(m)
+        self.r = r
 
         # 传感器的部分参数(暂无用，仅做保存)
         self.measurementParameters = {
@@ -23,6 +25,16 @@ class Dataloader:
         self.meanValueMat = None
         # 通过解析Dam文件，给measurementParameters和dataMat赋值
         self.readDamFile()
+        # 目标磁场强度，这里用B_avg替代
+        self.bt = np.mean(self.getMagneticFieldMatrix())
+
+    # 返回磁场强度矩阵数据 （phi方向，theta方向个数）
+    def getSize(self):
+        return [len(self.getMagneticFieldMatrix()), len(self.getMagneticFieldMatrix()[0])]
+
+    # 返回磁场强度矩阵的一维形式
+    def getReshapeData(self):
+        return self.getMagneticFieldMatrix().reshape((self.getSize()[0] * self.getSize()[1],), order='C')  # order=C表示优先行，'F'优先列
 
     # 返回磁场强度矩阵
     def getMagneticFieldMatrix(self):
@@ -91,6 +103,7 @@ if __name__ == '__main__':
     print(len(a.dataMat), len(a.dataMat[0]))
     a.getMagneticFieldMatrix()
     print(a.getUniformity())
+    print(a.getSize())
 
     #
     # file_name = '6009map1.txt'
