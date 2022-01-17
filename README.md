@@ -86,7 +86,7 @@ NMR的匀场片分布尺寸可由用户指定，以(40,24)为例，指phi方向�
 如果将![](https://latex.codecogs.com/svg.image?B_t)作为变量来处理，由于![](https://latex.codecogs.com/svg.image?\varepsilon)是变量，所以目标会变成一个非线性规划问题(存在![](https://latex.codecogs.com/svg.image?\varepsilon{B_t}))，这时就有两种方案：
 
 1. 固定![](https://latex.codecogs.com/svg.image?\varepsilon)，将![](https://latex.codecogs.com/svg.image?B_t)作为变量，通过步长遍历的方法手动搜索最低的![](https://latex.codecogs.com/svg.image?\varepsilon)值（因为单纯形法可以解出线性规划问题的全局最优解，如果手动设置的![](https://latex.codecogs.com/svg.image?\varepsilon)无法找到全局最优解，则证明无法将不均匀度降低到该值)
-2. 将问题转化成非线性规划问题，求得最小的$\epsilon$
+2. 将问题转化成非线性规划问题，求得最小的![](https://latex.codecogs.com/svg.image?\varepsilon)
 
 
 
