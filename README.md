@@ -29,7 +29,8 @@ NMR的匀场片分布尺寸可由用户指定，以(40,24)为例，指phi方向�
 
 <div align=center>
 <img src="https://latex.codecogs.com/svg.image?\left[\begin{matrix}A_{11}&A_{12}&A_{13}&A_{14}\\A_{21}&A_{22}&A_{23}&A_{24}\\A_{31}&A_{32}&A_{33}&A_{34}\\A_{41}&A_{42}&A_{43}&A_{44}\\\end{matrix}&space;\right]\left[\begin{matrix}A_{11}\\A_{12}\\A_{13}\\A_{14}\\...\\A_{42}\\A_{43}\\A_{44}\\\end{matrix}&space;\right]&space;" title="\left[\begin{matrix}A_{11}&A_{12}&A_{13}&A_{14}\\A_{21}&A_{22}&A_{23}&A_{24}\\A_{31}&A_{32}&A_{33}&A_{34}\\A_{41}&A_{42}&A_{43}&A_{44}\\\end{matrix} \right]\left[\begin{matrix}A_{11}\\A_{12}\\A_{13}\\A_{14}\\...\\A_{42}\\A_{43}\\A_{44}\\\end{matrix} \right] " />
-<div/>
+</div>
+
 
 (33,32)->(1056,)  (33,24)->(796,)
 
