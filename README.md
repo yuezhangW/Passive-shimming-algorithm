@@ -27,29 +27,9 @@ NMR的匀场片分布尺寸可由用户指定，以(40,24)为例，指phi方向�
 
 在计算灵敏度系数矩阵和匀场算法前，需要将二维的裸磁场数据reshape到一维。行表示phi方向，列表示theta方向。
 
-![](https://latex.codecogs.com/svg.image?\left[
-	\begin{matrix}
-		A_{11} & A_{12} & A_{13} & A_{14} \\
-		A_{21} & A_{22} & A_{23} & A_{24} \\
-		A_{31} & A_{32} & A_{33} & A_{34} \\
-		A_{41} & A_{42} & A_{43} & A_{44} 
-	\end{matrix} 
-\right]
-\rightarrow
-\left[
-	\begin{matrix}
-		A_{11}\\
-		A_{12}\\
-		A_{13}\\
-		A_{14}\\
-		...\\
-		A_{42}\\
-		A_{43}\\
-		A_{44}\\
-	\end{matrix} 
-\right])
-
-
+<div align=center>
+<img src="https://latex.codecogs.com/svg.image?\left[\begin{matrix}A_{11}&A_{12}&A_{13}&A_{14}\\A_{21}&A_{22}&A_{23}&A_{24}\\A_{31}&A_{32}&A_{33}&A_{34}\\A_{41}&A_{42}&A_{43}&A_{44}\\\end{matrix}&space;\right]\left[\begin{matrix}A_{11}\\A_{12}\\A_{13}\\A_{14}\\...\\A_{42}\\A_{43}\\A_{44}\\\end{matrix}&space;\right]&space;" title="\left[\begin{matrix}A_{11}&A_{12}&A_{13}&A_{14}\\A_{21}&A_{22}&A_{23}&A_{24}\\A_{31}&A_{32}&A_{33}&A_{34}\\A_{41}&A_{42}&A_{43}&A_{44}\\\end{matrix} \right]\left[\begin{matrix}A_{11}\\A_{12}\\A_{13}\\A_{14}\\...\\A_{42}\\A_{43}\\A_{44}\\\end{matrix} \right] " />
+<div/>
 
 (33,32)->(1056,)  (33,24)->(796,)
 
@@ -59,7 +39,9 @@ NMR的匀场片分布尺寸可由用户指定，以(40,24)为例，指phi方向�
 
 灵敏度系数矩阵指：单位面积的匀场片对DSV区域的每个点产生的z轴磁场强度。列数为NMR尺寸reshape到一维后的长度，如40x24=960，行数为DSV区域采样点reshape到一维后的长度，如33x32=1056。灵敏度系数矩阵的尺寸为(1056,960)
 
-<img src="https://latex.codecogs.com/svg.image?B_z(r_i,z_i)=\frac{\mu{_0}m_z}{4\pi}\left(\frac{3z_i^2}{(r_i^2&plus;z_i^2)^{2.5}}-\frac{1}{(r_i^2&plus;z_i^2)^{1.5}}\right)" title="B_z(r_i,z_i)=\frac{\mu{_0}m_z}{4\pi}\left(\frac{3z_i^2}{(r_i^2+z_i^2)^{2.5}}-\frac{1}{(r_i^2+z_i^2)^{1.5}}\right)" />
+<div align=center>
+  <img src="https://latex.codecogs.com/svg.image?B_z(r_i,z_i)=\frac{\mu{_0}m_z}{4\pi}\left(\frac{3z_i^2}{(r_i^2&plus;z_i^2)^{2.5}}-\frac{1}{(r_i^2&plus;z_i^2)^{1.5}}\right)" title="B_z(r_i,z_i)=\frac{\mu{_0}m_z}{4\pi}\left(\frac{3z_i^2}{(r_i^2+z_i^2)^{2.5}}-\frac{1}{(r_i^2+z_i^2)^{1.5}}\right)" />
+</div>
 
 这里的![](https://latex.codecogs.com/svg.image?r_i)和![](https://latex.codecogs.com/svg.image?z_i)分别表示P点和Q点在x0y平面的距离和z轴方向上的距离。![](https://latex.codecogs.com/svg.image?r_i^2+z_i^2)表示P点和Q点欧式距离的平方。
 
@@ -69,39 +51,9 @@ NMR的匀场片分布尺寸可由用户指定，以(40,24)为例，指phi方向�
 
 因此，![](https://latex.codecogs.com/svg.image?Ax)表示
 
-
-
-![](https://latex.codecogs.com/svg.image?\left[\begin{matrix}
-		a_{1,1} & a_{1,2} & a_{1,3} & ... & a_{1,960} \\
-		a_{2,1} & a_{2,2} & a_{2,3} & ... & a_{2,960} \\
-		a_{3,1} & a_{3,2} & a_{3,3} & ... & a_{3,960} \\
-		a_{4,1} & a_{4,2} & a_{4,3} & ... & a_{4,960} \\
-		... & ... & ... & ... & ...\\
-		a_{1056,1} & a_{1056,2} & a_{1056,3} & ... & a_{1056,960} \\
-	\end{matrix} 
-\right].
-\left[
-	\begin{matrix}
-		x_{1}\\
-		x_{2}\\
-		x_{3}\\
-		x_{4}\\
-		...\\
-		x_{960}\\
-	\end{matrix} 
-\right]=
-\left[
-	\begin{matrix}
-		a_{1,1}x_1+a_{1,2}x_2+a_{1,3}x_3+...+a_{1,960}x_{960}\\
-		a_{2,1}x_1+a_{2,2}x_2+a_{2,3}x_3+...+a_{2,960}x_{960}\\
-		a_{3,1}x_1+a_{3,2}x_2+a_{3,3}x_3+...+a_{3,960}x_{960}\\
-		a_{4,1}x_1+a_{4,2}x_2+a_{4,3}x_3+...+a_{4,960}x_{960}\\
-		...\\
-		a_{1056,1}x_1+a_{1056,2}x_2+a_{1056,3}x_3+...+a_{1056,960}x_{960}\\
-	\end{matrix}
-\right])
-
-
+<div align=center>
+<img src="https://latex.codecogs.com/svg.image?\left[\begin{matrix}&space;&space;a_{1,1}&space;&&space;a_{1,2}&space;&&space;a_{1,3}&space;&&space;...&space;&&space;a_{1,960}&space;\\&space;&space;a_{2,1}&space;&&space;a_{2,2}&space;&&space;a_{2,3}&space;&&space;...&space;&&space;a_{2,960}&space;\\&space;&space;a_{3,1}&space;&&space;a_{3,2}&space;&&space;a_{3,3}&space;&&space;...&space;&&space;a_{3,960}&space;\\&space;&space;a_{4,1}&space;&&space;a_{4,2}&space;&&space;a_{4,3}&space;&&space;...&space;&&space;a_{4,960}&space;\\&space;&space;...&space;&&space;...&space;&&space;...&space;&&space;...&space;&&space;...\\&space;&space;a_{1056,1}&space;&&space;a_{1056,2}&space;&&space;a_{1056,3}&space;&&space;...&space;&&space;a_{1056,960}&space;\\&space;\end{matrix}&space;\right].\left[&space;\begin{matrix}&space;&space;x_{1}\\&space;&space;x_{2}\\&space;&space;x_{3}\\&space;&space;x_{4}\\&space;&space;...\\&space;&space;x_{960}\\&space;\end{matrix}&space;\right]=\left[&space;\begin{matrix}&space;&space;a_{1,1}x_1&plus;a_{1,2}x_2&plus;a_{1,3}x_3&plus;...&plus;a_{1,960}x_{960}\\&space;&space;a_{2,1}x_1&plus;a_{2,2}x_2&plus;a_{2,3}x_3&plus;...&plus;a_{2,960}x_{960}\\&space;&space;a_{3,1}x_1&plus;a_{3,2}x_2&plus;a_{3,3}x_3&plus;...&plus;a_{3,960}x_{960}\\&space;&space;a_{4,1}x_1&plus;a_{4,2}x_2&plus;a_{4,3}x_3&plus;...&plus;a_{4,960}x_{960}\\&space;&space;...\\&space;&space;a_{1056,1}x_1&plus;a_{1056,2}x_2&plus;a_{1056,3}x_3&plus;...&plus;a_{1056,960}x_{960}\\&space;\end{matrix}\right]" title="\left[\begin{matrix} a_{1,1} & a_{1,2} & a_{1,3} & ... & a_{1,960} \\ a_{2,1} & a_{2,2} & a_{2,3} & ... & a_{2,960} \\ a_{3,1} & a_{3,2} & a_{3,3} & ... & a_{3,960} \\ a_{4,1} & a_{4,2} & a_{4,3} & ... & a_{4,960} \\ ... & ... & ... & ... & ...\\ a_{1056,1} & a_{1056,2} & a_{1056,3} & ... & a_{1056,960} \\ \end{matrix} \right].\left[ \begin{matrix} x_{1}\\ x_{2}\\ x_{3}\\ x_{4}\\ ...\\ x_{960}\\ \end{matrix} \right]=\left[ \begin{matrix} a_{1,1}x_1+a_{1,2}x_2+a_{1,3}x_3+...+a_{1,960}x_{960}\\ a_{2,1}x_1+a_{2,2}x_2+a_{2,3}x_3+...+a_{2,960}x_{960}\\ a_{3,1}x_1+a_{3,2}x_2+a_{3,3}x_3+...+a_{3,960}x_{960}\\ a_{4,1}x_1+a_{4,2}x_2+a_{4,3}x_3+...+a_{4,960}x_{960}\\ ...\\ a_{1056,1}x_1+a_{1056,2}x_2+a_{1056,3}x_3+...+a_{1056,960}x_{960}\\ \end{matrix}\right]" />
+</div>
 
 ![](https://latex.codecogs.com/svg.image?Ax)向量长度为(1056,1)，表示960个匀场片区域对第![](https://latex.codecogs.com/svg.image?i)个DSV区域采样点z方向的磁场强度。
 
@@ -111,18 +63,17 @@ NMR的匀场片分布尺寸可由用户指定，以(40,24)为例，指phi方向�
 
 整个匀场优化不等式的核心条件：不均匀度低于![](https://latex.codecogs.com/svg.image?\varepsilon)
 
-![](https://latex.codecogs.com/svg.image?H=\frac{|B_m+Ax-B_t|}{B_t}<\varepsilon)
+<div align=center>
+  <img src="https://latex.codecogs.com/svg.image?H=\frac{|B_m&plus;Ax-B_t|}{B_t}<\varepsilon" title="H=\frac{|B_m+Ax-B_t|}{B_t}<\varepsilon" />
+</div>
 
 ![](https://latex.codecogs.com/svg.image?B_m)表示DSV区域采样z方向的裸磁场强度，本项目中size为(1056,1)，![](https://latex.codecogs.com/svg.image?Ax)表示匀场片对DSV区域产生的z方向磁场强度，![](https://latex.codecogs.com/svg.image?B_t)表示DSV区域采样点z方向的目标磁场强度，![](https://latex.codecogs.com/svg.image?|B_m+Ax-B_t|)表示DSV区域采样点实际磁场强度偏差值，与![](https://latex.codecogs.com/svg.image?B_t)相除得到DSV区域的不均匀度向量![](https://latex.codecogs.com/svg.image?H)。
 
 去绝对值：
 
-![](https://latex.codecogs.com/svg.image?\begin{cases}
-	Ax-(1+\varepsilon)B_t\leq -B_m \\
-	-Ax+(1-\varepsilon)B_t\leq B_m
-\end{cases})
-
-
+<div align=center>
+  <img src="https://latex.codecogs.com/svg.image?\begin{cases}&space;Ax-(1&plus;\varepsilon)B_t\leq&space;-B_m&space;\\&space;-Ax&plus;(1-\varepsilon)B_t\leq&space;B_m\end{cases}" title="\begin{cases} Ax-(1+\varepsilon)B_t\leq -B_m \\ -Ax+(1-\varepsilon)B_t\leq B_m\end{cases}" />
+</div>
 
 这里的![](https://latex.codecogs.com/svg.image?B_t)有两种处理方法：视作变量还是定值？如果将![](https://latex.codecogs.com/svg.image?B_t)作为定值来处理(取裸磁场强度数据![](https://latex.codecogs.com/svg.image?B_m)的均值![](https://latex.codecogs.com/svg.image?B_{avg}))：
 
