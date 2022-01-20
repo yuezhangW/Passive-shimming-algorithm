@@ -5,7 +5,7 @@ from src.SensitivityCoefficientMatrix import SensitivityCoefficientMatrix
 from src.Solver import Solver
 
 from scipy.optimize import linprog
-import os
+import os, time
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -52,14 +52,18 @@ def test2():
             nmr=nmr
         )
 
+        senMat.getSenMat()
+        startTime = time.time()
         c, A, b, bounds = solver.getOptConfig(
             method=3,
             epsilon=0,
             kappa=Config.SHIMMING_KAPPA
         )
         resNew = linprog(c, A_ub=A, b_ub=b, bounds=bounds, method="highs")
+        endTime = time.time()
         hom = resNew.x[-1] / 0.5 / 1e-6
         print("第" + str(i) + "组数据在Bt为定值情况下(Bt=B_avg)可匀场的最低不均匀度为：" + str(hom))
+        print("第" + str(i) + "组耗时:"+str(endTime - startTime)+"s")
 
 
 # 3：Bt为变量时，可匀场的最低不均匀度
@@ -92,9 +96,12 @@ def test3():
             magneticField=magneticFieldData,
             nmr=nmr
         )
+        senMat.getSenMat()
 
+        startTime = time.time()
         res = solver.getBaseRes(Config.SHIMMING_TARGET_INHOMOGENEITY_MIN, Config.SHIMMING_TARGET_INHOMOGENEITY_MAX, Config.SHIMMING_STEP, Config.SHIMMING_KAPPA, 2)
-
+        endTime = time.time()
+        print("第" + str(i) + "组耗时:" + str(endTime - startTime) + "s")
 
 # 4：基于L1范数最小二乘正则化算法的无源匀场算法
 def test4():
@@ -163,6 +170,7 @@ def test5():
         epsilons = np.linspace(10, 100, 90, endpoint=False)
         dataList = []
         for epsilon in epsilons:
+            startTime = time.time()
             c, A, b, bounds = solver.getOptConfig(
                 method=1,
                 epsilon=epsilon * 0.5 * 1e-6,
@@ -175,12 +183,14 @@ def test5():
                 # 计算不均匀度
                 magneticFieldDataNow = magneticFieldData.getReshapeData() + senMat.getSenMat().T * nmr.thickness[0] @ res.x
                 hom = (np.max(magneticFieldDataNow) - np.min(magneticFieldDataNow)) / magneticFieldData.bt * 1e6
-                dataList.append([hom, thicknessTotal])
-        df = pd.DataFrame(dataList, columns=[Config.TABLE_AXIS_HOM, Config.TABLE_AXIS_X])
+                endTime = time.time()  # 记录程序结束运行时间
+
+                dataList.append([hom, thicknessTotal, endTime - startTime])
+        df = pd.DataFrame(dataList, columns=[Config.TABLE_AXIS_HOM, Config.TABLE_AXIS_X, Config.TABLE_AXIS_TIME])
         folderPath = os.path.join(os.path.join(os.path.dirname(os.getcwd()), 'resources'), 'ExcelFiles')
         filePath = os.path.join(folderPath, magneticFieldData.filename + "_hom&x_FTMF.xlsx")
         df.to_excel(filePath)
-        print("完成"+magneticFieldData.filename+"的excel记录")
+        print("完成"+magneticFieldData.filename+"的excel记录，单次运行时间均值为：" + str(df[Config.TABLE_AXIS_TIME].mean()) + "s")
 
         x, y = df[Config.TABLE_AXIS_HOM], df[Config.TABLE_AXIS_X]
         plt.xlabel(Config.TABLE_AXIS_HOM)
@@ -283,7 +293,7 @@ def test7():
 
 if __name__ == '__main__':
     test1()
-    test7()
+    test3()
     # # 配置NMR各项参数
     # nmr = NMR(
     #     size=Config.NMR_SIZE,

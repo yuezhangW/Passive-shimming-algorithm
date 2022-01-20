@@ -18,4 +18,5 @@ class Config:
 
     TABLE_AXIS_HOM = "Unhomogeneity(ppm)"
     TABLE_AXIS_X = "Consumption of silicon steels(m)"
+    TABLE_AXIS_TIME = "Cost time(second)"
     SELECT_POINTS_NUM = 15
