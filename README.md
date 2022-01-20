@@ -131,7 +131,7 @@ NMR的匀场片分布尺寸可由用户指定，以(40,24)为例，指phi方向�
 如果将![](https://latex.codecogs.com/svg.image?B_t)仍然考虑为定值，将目标函数从线性函数变为基于L1范数的最小二乘非线性函数：
 
 <div align=center>
-  <img src="https://latex.codecogs.com/svg.image?f_{min}=\|Ax-b\|_2+\lambda{_1}\vert Ax-b\vert _1+\lambda{_2}\vert x-x_0\vert{_1}"/>
+  <img src="https://latex.codecogs.com/svg.image?f_{min}=\|Ax-b\|_2&plus;\lambda{_1}\vert&space;Ax-b\vert&space;_1&plus;\lambda{_2}\vert&space;x-x_0\vert{_1}" title="f_{min}=\|Ax-b\|_2+\lambda{_1}\vert Ax-b\vert _1+\lambda{_2}\vert x-x_0\vert{_1}" />
 </div>
 
 测试结果来看，该方法较为不稳定，相较于线性规划算法运算时间较长，效果不理想，且线性规划算法可以设置权值来平衡匀场片厚度与不均匀度。
