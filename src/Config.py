@@ -15,3 +15,7 @@ class Config:
     SHIMMING_TARGET_INHOMOGENEITY_MIN = 15  # 搜索线性解的最低目标不均匀度
     SHIMMING_TARGET_INHOMOGENEITY_MAX = 23  # 搜索线性解的最高目标不均匀度
     SHIMMING_STEP = 200000  # 搜索步长
+
+    TABLE_AXIS_HOM = "Unhomogeneity(ppm)"
+    TABLE_AXIS_X = "Consumption of silicon steels(m)"
+    SELECT_POINTS_NUM = 15

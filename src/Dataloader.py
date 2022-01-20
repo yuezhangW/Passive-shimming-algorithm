@@ -5,6 +5,7 @@ import os
 
 class Dataloader:
     def __init__(self, filename, r):
+        self.filename = filename
         self.folderPath = os.path.join(os.path.join(os.path.dirname(os.getcwd()), 'resources'), 'DamFiles')
         self.filePath = os.path.join(self.folderPath, filename)
 

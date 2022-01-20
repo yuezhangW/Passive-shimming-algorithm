@@ -69,8 +69,8 @@ class Solver:
 
         # bt为变量T为定值
         elif method == 2:
-            c = np.zeros((senMat.shape[0] + 1), np.float64)
-            c[-1] = 1
+            c = np.ones((senMat.shape[0] + 1), np.float64)
+            c[-1] = 0
             A = np.hstack((
                 np.vstack((senMat, -(1 + epsilon) * np.ones((1, senMat.shape[1])))),
                 -np.vstack((senMat, -(1 - epsilon) * np.ones((1, senMat.shape[1]))))
@@ -105,37 +105,11 @@ class Solver:
     """
     最小二乘法minimize（非线性）
     """
-    def getLeastSquare(self):
-        senMat, magneticFieldMat = self.senMat.getSenMat(), self.magneticField.getReshapeData()
-        thickness, thicknessMax = self.nmr.thickness[0], self.nmr.thickness[1]
-        bt = self.magneticField.bt
 
-        A = senMat.T * thickness
-        x = cp.Variable(senMat.shape[0])
-
-        objective = cp.Minimize(cp.sum_squares(A @ x + magneticFieldMat - bt))
-        epsilon = 100*0.5*1e-6
-        constraints = [0 <= x, x <= (thicknessMax / thickness), A @ x - (1 + epsilon) * bt <= -magneticFieldMat, -A @ x + (1 - epsilon) * bt <= magneticFieldMat]
-        prob = cp.Problem(objective, constraints)
-
-        # The optimal objective value is returned by `prob.solve()`.
-        result = prob.solve()
-        print(result)
-        # The optimal value for x is stored in `x.value`.
-        print(x.value)
-        # The optimal Lagrange multiplier for a constraint is stored in
-        # `constraint.dual_value`.
-        hom = A @ x.value + magneticFieldMat
-        homValue = (np.max(hom) - np.min(hom)) / bt / 1e-6
-        print(homValue)
-        #print(constraints[0].dual_value)
-
-
-    # 非线性规划（暂未生效）
-    def getNonlinearResult(self):
+    def getNonlinearResult(self, epsilon, l1, l2):
         def func(args):
             A, Bm, Bt = args
-            v = lambda x: np.sum(np.square(A @ x + Bm - Bt))
+            v = lambda x: np.sum(np.square(A @ x + Bm - Bt)) + l1 * np.sum()
             return v
 
         def cons(args):
@@ -156,7 +130,7 @@ class Solver:
         con = cons((senMat.T,
             magneticFieldMat,
             bt,
-            25 * 0.5 * 1e-6
+            epsilon * 0.5 * 1e-6
         ))
 
         args = ((
@@ -169,7 +143,7 @@ class Solver:
         upper = np.ones((senMat.shape[0]), np.float64) * thicknessMax / thickness
         bounds = [(lower[i], upper[i]) for i in range(lower.shape[0])]
         x0 = np.zeros((senMat.shape[0],), np.float64)
-        res = scipy.optimize.minimize(func(args), x0, method='SLSQP', constraints=con, bounds=bounds)
+        res = scipy.optimize.minimize(func(args), x0, constraints=con, bounds=bounds)
         print(res)
         print("不均匀度：")
         hom = senMat.T @ res.x + magneticFieldMat
