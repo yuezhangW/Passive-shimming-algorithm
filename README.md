@@ -99,3 +99,17 @@ NMR的匀场片分布尺寸可由用户指定，以(40,24)为例，指phi方向�
 
 这里需要注意Python的Scipy库的linprog函数，在使用”highs“方法时，某些输入下会出现程序卡死的bug，目前尝试了timeout等方法但无法作用，可能是直接进程卡死了，暂时没有解决，拟通过回避bug参数的方法来避免。（改变Config文件中stepNum的值）
 
+
+
+<div>
+  <img src="https://github.com/YueZhangX/Passive-shimming-algorithm/blob/main/resources/ImageFiles/6009map1_hom%26x_linear.png" title="pic1"/>
+</div>
+
+
+
+
+
+
+
+
+
