@@ -75,22 +75,18 @@ NMR的匀场片分布尺寸可由用户指定，以(40,24)为例，指phi方向�
 <div align=center>
   <img src="https://latex.codecogs.com/svg.image?\begin{cases}&space;Ax-(1&plus;\varepsilon)B_t\leq&space;-B_m&space;\\&space;-Ax&plus;(1-\varepsilon)B_t\leq&space;B_m\end{cases}" title="\begin{cases} Ax-(1+\varepsilon)B_t\leq -B_m \\ -Ax+(1-\varepsilon)B_t\leq B_m\end{cases}" />
 </div>
+#### 线性规划
 
-这里的![](https://latex.codecogs.com/svg.image?B_t)有两种处理方法：视作变量还是定值？如果将![](https://latex.codecogs.com/svg.image?B_t)作为定值来处理(取裸磁场强度数据![](https://latex.codecogs.com/svg.image?B_m)的均值![](https://latex.codecogs.com/svg.image?B_{avg}))：
+这里的![](https://latex.codecogs.com/svg.image?B_t)有两种处理方法：视作变量还是定值？如果将![](https://latex.codecogs.com/svg.image?B_t)作为定值来处理(取裸磁场强度数据![](https://latex.codecogs.com/svg.image?B_m)的均值![](https://latex.codecogs.com/svg.image?B_{avg})，后续简称为FTMF)：
 
 |                                  |  待匀场数据1(33x32)  |  待匀场数据2(33x24)   |
 | :------------------------------: | :------------------: | :-------------------: |
 |          匀场前不均匀度          | 374.1361988011714ppm | 673.6933666712266ppm  |
 | Bt为定值时最低不均匀度(非整数解) | 27.96210756804757ppm | 21.643841045385646ppm |
 
-如果将![](https://latex.codecogs.com/svg.image?B_t)作为变量来处理，由于![](https://latex.codecogs.com/svg.image?\varepsilon)是变量，所以目标会变成一个非线性规划问题(存在![](https://latex.codecogs.com/svg.image?\varepsilon{B_t}))，这时就有两种方案：
+如果将![](https://latex.codecogs.com/svg.image?B_t)作为变量来处理，由于![](https://latex.codecogs.com/svg.image?\varepsilon)是变量，所以目标会变成一个非线性规划问题(存在![](https://latex.codecogs.com/svg.image?\varepsilon{B_t}))。此时可以通过手动调整![](https://latex.codecogs.com/svg.image?\varepsilon)的方法来保留问题的线性。
 
-1. 固定![](https://latex.codecogs.com/svg.image?\varepsilon)，将![](https://latex.codecogs.com/svg.image?B_t)作为变量，通过步长遍历的方法手动搜索最低的![](https://latex.codecogs.com/svg.image?\varepsilon)值（因为单纯形法可以解出线性规划问题的全局最优解，如果手动设置的![](https://latex.codecogs.com/svg.image?\varepsilon)无法找到全局最优解，则证明无法将不均匀度降低到该值)
-2. 将问题转化成非线性规划问题，求得最小的![](https://latex.codecogs.com/svg.image?\varepsilon)
-
-
-
-如果采用第一种方案：
+固定![](https://latex.codecogs.com/svg.image?\varepsilon)，将![](https://latex.codecogs.com/svg.image?B_t)作为变量，通过步长遍历的方法手动搜索最低的![](https://latex.codecogs.com/svg.image?\varepsilon)值（因为单纯形法可以解出线性规划问题的全局最优解，如果手动设置的![](https://latex.codecogs.com/svg.image?\varepsilon)无法找到全局最优解，则证明无法将不均匀度降低到该值，后续简称为OTMF)
 
 |                                  |  待匀场数据1(33x32)   |  待匀场数据2(33x24)  |
 | :------------------------------: | :-------------------: | :------------------: |
@@ -99,11 +95,21 @@ NMR的匀场片分布尺寸可由用户指定，以(40,24)为例，指phi方向�
 
 这里需要注意Python的Scipy库的linprog函数，在使用”highs“方法时，某些输入下会出现程序卡死的bug，目前尝试了timeout等方法但无法作用，可能是直接进程卡死了，暂时没有解决，拟通过回避bug参数的方法来避免。（改变Config文件中stepNum的值）
 
-
-
-<div>
-  <img src="https://github.com/YueZhangX/Passive-shimming-algorithm/blob/main/resources/ImageFiles/6009map1_hom%26x_linear.png" title="pic1"/>
+<div align=center>
+  <img src="https://github.com/YueZhangX/Passive-shimming-algorithm/blob/main/resources/ImageFiles/6009map1_hom%26x_linear.png" title="数据1的FTMF和OTMF对比"/>
+  <br/>
+  <strong>
+    图1 "6009map1"数据下FTMF和OTMF的对比
+  </strong>
+  <br/>
+  <img src="https://github.com/YueZhangX/Passive-shimming-algorithm/blob/main/resources/ImageFiles/9006map1_hom%26x_linear.png" title="数据2的FTMF和OTMF对比"/>
+  <br/>
+  <strong>
+    图2 "9006map1"数据下FTMF和OTMF的对比
+  </strong>
 </div>
+
+
 
 
 
