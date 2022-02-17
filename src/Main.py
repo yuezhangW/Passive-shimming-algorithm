@@ -133,8 +133,11 @@ def test4():
             magneticField=magneticFieldData,
             nmr=nmr
         )
-
-        res = solver.getNonlinearResult(epsilon=20)
+        senMat.getSenMat()
+        startTime = time.time()
+        res = solver.getNonlinearResult(epsilon=37, l1=1, l2=1)
+        endTime = time.time()
+        print("耗时："+str(endTime - startTime))
 
 # 5：Bt为定值时，计算不均匀度和最小匀场片厚度
 def test5():
@@ -259,7 +262,7 @@ def test6():
         plt.show()
 
 
-# 7：画图
+# 7：FTMF和OTMF的对比画图
 def test7():
     filenames = [["6009map1.txt_hom&x_FTMF.xlsx", "6009map1.txt_hom&x_OTMF.xlsx"],
                  ["9006map1.txt_hom&x_FTMF.xlsx", "9006map1.txt_hom&x_OTMF.xlsx"]]
@@ -290,10 +293,90 @@ def test7():
         plt.savefig(filePath)
         plt.show()
 
+# 8：直接使用启发式算法
+def test8():
+    for i, filename in enumerate(Config.FILES_NAMES):
+        # 配置NMR各项参数
+        nmr = NMR(
+            size=Config.NMR_SIZE,
+            thickness=Config.NMR_THICKNESS,
+            mz=Config.NMR_MZ,
+            pieceArea=Config.NMR_PIECE_AREA,
+            z=Config.NMR_Z,
+            r=Config.NMR_R
+        )
+
+        # 配置DSV采样点数据
+        magneticFieldData = Dataloader(
+            filename=filename,
+            r=Config.DSV_R
+        )
+
+        # 获取灵敏度系数矩阵
+        senMat = SensitivityCoefficientMatrix(
+            dataloader=magneticFieldData,
+            NMR=nmr
+        )
+
+        solver = Solver(
+            senMat=senMat,
+            magneticField=magneticFieldData,
+            nmr=nmr
+        )
+        senMat.getSenMat()
+        startTime = time.time()
+        solver.integerProgrammingBySKO()
+        endTime = time.time()
+        print("耗时："+str(endTime - startTime)+"s")
+        # epsilons = np.linspace(10, 100, 90, endpoint=False)
+        # dataList = []
+        # for epsilon in epsilons:
+        #     startTime = time.time()
+        #     c, A, b, bounds = solver.getOptConfig(
+        #         method=1,
+        #         epsilon=epsilon * 0.5 * 1e-6,
+        #         kappa=Config.SHIMMING_KAPPA
+        #     )
+        #     res = linprog(c, A_ub=A, b_ub=b, bounds=bounds, method="highs")
+
+def test9():
+    for i, filename in enumerate(Config.FILES_NAMES):
+        # 配置NMR各项参数
+        nmr = NMR(
+            size=Config.NMR_SIZE,
+            thickness=Config.NMR_THICKNESS,
+            mz=Config.NMR_MZ,
+            pieceArea=Config.NMR_PIECE_AREA,
+            z=Config.NMR_Z,
+            r=Config.NMR_R
+        )
+
+        # 配置DSV采样点数据
+        magneticFieldData = Dataloader(
+            filename=filename,
+            r=Config.DSV_R
+        )
+
+        # 获取灵敏度系数矩阵
+        senMat = SensitivityCoefficientMatrix(
+            dataloader=magneticFieldData,
+            NMR=nmr
+        )
+
+        solver = Solver(
+            senMat=senMat,
+            magneticField=magneticFieldData,
+            nmr=nmr
+        )
+        senMat.getSenMat()
+        startTime = time.time()
+        solver.mixedIntegerAndNonProgramming(2)
+        endTime = time.time()
+        print("耗时："+str(endTime - startTime)+"s")
 
 if __name__ == '__main__':
     test1()
-    test3()
+    test9()
     # # 配置NMR各项参数
     # nmr = NMR(
     #     size=Config.NMR_SIZE,

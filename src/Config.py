@@ -20,3 +20,6 @@ class Config:
     TABLE_AXIS_X = "Consumption of silicon steels(m)"
     TABLE_AXIS_TIME = "Cost time(second)"
     SELECT_POINTS_NUM = 15
+
+    GA_AXIS_X = "iterations"
+    GA_AXIS_Y = "Unhomogeneity(ppm)"
