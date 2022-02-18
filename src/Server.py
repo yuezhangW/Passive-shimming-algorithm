@@ -1,5 +1,56 @@
+import json
+
+from fastapi import FastAPI
+from pydantic import BaseModel
 import numpy as np
-import sys
+import uvicorn
+
+
+class MatrixConfig(BaseModel):
+    nmrNumOfPhi: int
+    nmrNumOfZ: int
+    nmrLengthOfZ: float
+    nmrLengthOfR: float
+    nmrThicknessMin: float
+    nmrThicknessMax: float
+    nmrMz: float
+    nmrPieceArea: float
+
+    dsvNumOfPhi: int
+    dsvNumOfTheta: int
+    dsvLengthOfR: float
+
+
+app = FastAPI()
+
+
+@app.post("/task/matrix")
+async def createMatrix(matrixConfig: MatrixConfig):
+    nmrNumOfPhi = matrixConfig.nmrNumOfPhi
+    nmrNumOfZ = matrixConfig.nmrNumOfZ
+    nmrLengthOfZ = matrixConfig.nmrLengthOfZ
+    nmrLengthOfR = matrixConfig.nmrLengthOfR
+    nmrThicknessMin = matrixConfig.nmrThicknessMin
+    nmrThicknessMax = matrixConfig.nmrThicknessMax
+    nmrMz = matrixConfig.nmrMz
+    nmrPieceArea = matrixConfig.nmrPieceArea
+
+    dsvNumOfPhi = matrixConfig.dsvNumOfPhi
+    dsvNumOfTheta = matrixConfig.dsvNumOfTheta
+    dsvLengthOfR = matrixConfig.dsvLengthOfR
+
+    qPoints, pPoints = getQPoints(int(nmrNumOfPhi), int(nmrNumOfZ), np.float(nmrLengthOfR),
+                                  np.float(nmrLengthOfZ)), getPPoints(int(dsvNumOfPhi), int(dsvNumOfTheta),
+                                                                      np.float(dsvLengthOfR))
+
+    senMat = np.zeros((qPoints.shape[0], pPoints.shape[0]), np.float64)
+    print(senMat.shape)
+    for i, qPoint in enumerate(qPoints):
+        for j, pPoint in enumerate(pPoints):
+            senMat[i, j] = nmrPieceArea * getBzP2P(nmrMz, qPoint, pPoint)
+    print(senMat.tolist())
+    return {"senMat": senMat.tolist()}
+
 
 """
 计算点对点的Bz
@@ -70,28 +121,6 @@ def getPPoints(dsvNumOfPhi, dsvNumOfTheta, dsvLengthOfR):
 
     return pPoints
 
+
 if __name__ == '__main__':
-    nmrNumOfPhi = sys.argv[0]
-    nmrNumOfZ = sys.argv[1]
-    nmrLengthOfZ = sys.argv[2]
-    nmrLengthOfR = sys.argv[3]
-    nmrThicknessMin = sys.argv[4]
-    nmrThicknessMax = sys.argv[5]
-    nmrMz = sys.argv[6]
-    nmrPieceArea = sys.argv[7]
-
-    dsvNumOfPhi = sys.argv[8]
-    dsvNumOfTheta = sys.argv[9]
-    dsvLengthOfR = sys.argv[10]
-
-    qPoints, pPoints = getQPoints(int(nmrNumOfPhi), int(nmrNumOfZ), np.float(nmrLengthOfR), np.float(nmrLengthOfZ)), getPPoints(int(dsvNumOfPhi), int(dsvNumOfTheta), np.float(dsvLengthOfR))
-    senMat = np.zeros((qPoints.shape[0], pPoints.shape[0]), np.float64)
-    for i, qPoint in enumerate(qPoints):
-        for j, pPoint in enumerate(pPoints):
-            senMat[i, j] = nmrPieceArea * getBzP2P(nmrMz, qPoint, pPoint)
-
-    print(senMat)
-
-
-
-
+    uvicorn.run("Server:app", host="127.0.0.1", port=8080)
